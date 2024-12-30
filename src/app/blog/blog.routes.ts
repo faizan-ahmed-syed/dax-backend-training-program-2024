@@ -1,7 +1,7 @@
 import express from 'express';
-import BlogController from './blog.controller.js';
-import validateBody from '../../shared/middlwear/validateBody.js';
-import { createBlogSchema } from './schema/create-blog.validator.js';
+import BlogController from './blog.controller.ts';
+import validateBody from '../../shared/middlwear/validateBody.ts';
+import { createBlogSchema } from './schema/create-blog.validator.ts';
 
 const router = express.Router();
 

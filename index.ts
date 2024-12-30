@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import express, { Request, Response, NextFunction, Express } from 'express';
 import { config } from 'dotenv'
-import BlogRoutes from './src/app/blog/blog.routes.js'
+import BlogRoutes from './src/app/blog/blog.routes.ts'
 import * as z from 'zod'
 
 config();
