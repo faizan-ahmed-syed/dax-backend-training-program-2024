@@ -4,13 +4,16 @@
  * @param schema - The Zod schema to validate the request body against.
  * @returns Middleware function for Express.
  */
-const validateBody = (schema) => {
-    return (req, res, next) => {
+import { Request, Response, NextFunction } from 'express';
+import { ZodSchema } from 'zod';
+
+const validateBody = (schema:ZodSchema) => {
+    return (req:Request, res:Response, next:NextFunction) => {
         try {
             // Validate the request body
             schema.parse(req.body);
             next(); // Proceed to the next middleware or route handler
-        } catch (err) {
+        } catch (err:any) {
             // Handle validation errors
             if (err instanceof Error) {
                 res.status(400).json({
