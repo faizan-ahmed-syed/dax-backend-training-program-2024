@@ -23,6 +23,11 @@ class CategoryRepository {
         return await Category.findById(id);
     }
 
+    // Find a category post by its name
+    static async findByname(name: string): Promise<ICategory | null> {
+        return await Category.findOne({name});
+    }
+
     // Update a category post by its ID
     static async updateById(id: string, data: UpdatedRepoData): Promise<ICategory | null> {
         return await Category.findByIdAndUpdate(

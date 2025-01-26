@@ -1,12 +1,13 @@
-import { createClient } from 'redis';
+// import { createClient } from 'redis';
 import { AccessRoutes } from './app/rbac/access.routes';
 import mongoose from 'mongoose';
 import express, { Request, Response, NextFunction, Express } from 'express';
 import { config } from 'dotenv';
-import CategoryRoutes from "./app/categories/categories.routes"
+import {CategoryRoutes} from "./app/categories/categories.routes"
 import * as z from 'zod';
 import { logger } from './shared/logger';
 import { BlogRoutes } from './app/blog/blog.routes';
+import { createClient } from 'redis';
 
 config(); // Load environment variables
 
@@ -21,20 +22,23 @@ const envValidatorSchema = z.object({
 
 async function main() {
     try {
-        // TODO: Redis Client Error ConnectionTimeoutError: Connection timeout
-        // // Initialize Redis client
-        // const client = createClient({
-        //     username: 'default',
-        //     password: 'gQ8yMKrF2ySFfVBaB94jUcw0JIDXWowy',
-        //     socket: {
-        //         host: 'redis-19977.c267.us-east-1-4.ec2.redns.redis-cloud.com',
-        //         port: 19977
-        //     }
-        // });
-
-        // // Event handler for Redis client errors
-        // client.on('error', err => console.log('Redis Client Error', err));
-
+        const client = createClient({
+            username: process.env.REDIS_USERNAME || 'default',
+            password: process.env.REDIS_PASSWORD || '',
+            socket: {
+                host: 'redis-15018.c12.us-east-1-4.ec2.redns.redis-cloud.com',
+                port: 15018
+            }
+        });
+        
+        client.on('error', err => console.log('Redis Client Error', err));
+        
+        await client.connect();
+        logger.info('Connected to redis');
+        await client.set('foo', 'bar');
+        const result = await client.get('foo');
+        console.log(result)  // >>> bar
+        
         // // Connect to Redis
         // await client.connect();
 
@@ -59,7 +63,7 @@ app.use(express.json());
 
 // Modular Routes
 app.use('/blogs', new BlogRoutes().router);
-app.use('/category', CategoryRoutes);
+app.use('/category', new CategoryRoutes().router);
 app.use('/users', new AccessRoutes().router)
 
 // Global Error Handling Middleware

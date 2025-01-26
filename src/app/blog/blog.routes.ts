@@ -5,11 +5,11 @@ import BlogController from './blog.controller';
 import { updateBlogSchema } from './schema/update-blog.valdation';
 // import { authorization } from '../../shared/middleware/authorization';
 
-// TODO: your-name/feature/soft-delete-blog
-// TODO: Soft delete API
-// TODO: Hard delete API
-// TODO: Restore delete data API
-// TODO: Get all trash data API
+// TODO-C: your-name/feature/soft-delete-blog
+// TODO-C: Soft delete API
+// TODO-C: Hard delete API
+// TODO-C: Restore delete data API
+// TODO-C: Get all trash data API
 
 export class BlogRoutes {
   readonly router: Router = Router();
@@ -34,6 +34,7 @@ export class BlogRoutes {
       // blogController.createBlog,
 
       // BlogController.createBlog,
+      
       async (req: Request, res: Response, next: NextFunction) => {
         try {
           //   @ts-ignore
@@ -51,6 +52,31 @@ export class BlogRoutes {
         try {
           //   @ts-ignore
           await this.controller.getAllBlogs(req, res);
+        } catch (err) {
+          next(err);
+        }
+      }
+    );
+
+    // Get all blogs
+    this.router.get(
+      '/trash',
+      async (req: Request, res: Response, next: NextFunction) => {
+        try {
+          //   @ts-ignore
+          await this.controller.getalltrash(req, res);
+        } catch (err) {
+          next(err);
+        }
+      }
+    );
+
+    // Get blogs with category filter
+    this.router.get(
+      '/filter',
+      async (req: Request, res: Response, next: NextFunction) => {
+        try {
+          await this.controller.getBlogsByCategoryFilter(req, res);
         } catch (err) {
           next(err);
         }
@@ -82,6 +108,32 @@ export class BlogRoutes {
       }
     );
 
+
+    // Soft delete a blog by ID
+    this.router.put(
+      '/delete/:id',
+      async (req: Request, res: Response, next: NextFunction) => {
+        try {
+          await this.controller.softdelete(req, res);
+        } catch (err) {
+          next(err);
+        }
+      }
+    );
+
+      // restore delete a blog by ID
+      this.router.put(
+        '/restore/:id',
+        async (req: Request, res: Response, next: NextFunction) => {
+          try {
+            await this.controller.restoredelete(req, res);
+          } catch (err) {
+            next(err);
+          }
+        }
+        );
+
+
     // Delete a blog by ID
     this.router.delete(
       '/:id',
@@ -94,17 +146,7 @@ export class BlogRoutes {
       }
     );
 
-    // Get blogs by category with pagination
-    this.router.get(
-      '/category/:categoryId',
-      async (req: Request, res: Response, next: NextFunction) => {
-        try {
-          await this.controller.getBlogsByCategory(req, res);
-        } catch (err) {
-          next(err);
-        }
-      }
-    );
+    
   }
 }
 
